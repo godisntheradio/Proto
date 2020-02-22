@@ -4,7 +4,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Runtime/Engine/Classes/Engine/World.h"
-StateCameraFixedTrigger::StateCameraFixedTrigger(CStateMachine * owner) : CState(owner)
+StateCameraFixedTrigger::StateCameraFixedTrigger(AMainCamera* owner) : CState(owner)
 {
 }
 
@@ -14,15 +14,14 @@ StateCameraFixedTrigger::~StateCameraFixedTrigger()
 
 void StateCameraFixedTrigger::VAction()
 {
-	float DeltaTime = cameraRef->GetWorld()->GetDeltaSeconds();
-	cameraRef->SetActorLocation(FMath::Lerp(cameraRef->GetActorLocation() , cameraRef->FixedCameraPos.GetLocation(), DeltaTime * cameraRef->Settings.DisplacementSpeed));
-	FQuat newRotation = FQuat(UKismetMathLibrary::FindLookAtRotation(cameraRef->GetActorLocation(), cameraRef->MainTarget->GetActorLocation()));
-	cameraRef->SetActorRotation(FQuat::Slerp(cameraRef->GetActorRotation().Quaternion(), newRotation, DeltaTime * cameraRef->Settings.DisplacementSpeed));
+	float DeltaTime = Owner->GetWorld()->GetDeltaSeconds();
+	Owner->SetActorLocation(FMath::Lerp(Owner->GetActorLocation() , Owner->FixedCameraPos.GetLocation(), DeltaTime * Owner->Settings.DisplacementSpeed));
+	FQuat newRotation = FQuat(UKismetMathLibrary::FindLookAtRotation(Owner->GetActorLocation(), Owner->MainTarget->GetActorLocation()));
+	Owner->SetActorRotation(FQuat::Slerp(Owner->GetActorRotation().Quaternion(), newRotation, DeltaTime * Owner->Settings.DisplacementSpeed));
 }
 
 void StateCameraFixedTrigger::VEntryAction()
 {
-	cameraRef = Cast<AMainCamera>(GetOwner()->User);
 }
 
 void StateCameraFixedTrigger::VExitAction()

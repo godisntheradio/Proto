@@ -5,7 +5,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Runtime/Engine/Classes/Engine/World.h"
-StateCameraFixed::StateCameraFixed(CStateMachine* owner) : CState(owner)
+StateCameraFixed::StateCameraFixed(AMainCamera* owner) : CState(owner)
 {
 
 }

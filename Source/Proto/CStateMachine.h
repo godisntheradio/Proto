@@ -2,27 +2,79 @@
 
 #pragma once
 
-#include "CoreMinimal.h"
+#include "Containers/Array.h"
 #include "CState.h"
 
 
 /**
  * 
  */
+template<typename T>
 class PROTO_API CStateMachine
 {
 public:
-	CStateMachine(AActor* stateMachineUser);
+	CStateMachine(T* stateMachineUser);
 	~CStateMachine();
 
-	CState* InitialState;
-	CState* CurrentState;
-	void Start();
+	CState<T>* InitialState;
+	CState<T>* CurrentState;
+	void Start(CState<T>* startState);
 	void Update();
-	void AddState(CState* newState);
-	void SetInitialState(CState* initState);
+	CStateMachine<T>* AddState(CState<T>* newState);
 
-	AActor* User;
+	T* User;
 private:
-	TArray<CState*> StateList;
+	TArray<CState<T>*> StateList;
 };
+
+template <typename T>
+CStateMachine<T>::CStateMachine(T* stateMachineUser)
+{
+	StateList = TArray<CState<T>*>();
+	User = stateMachineUser;
+}
+template <typename T>
+CStateMachine<T>::~CStateMachine()
+{
+}
+template <typename T>
+void CStateMachine<T>::Start(CState<T>* startState)
+{
+	InitialState = startState;
+	CurrentState = InitialState;
+	CurrentState->VEntryAction();
+}
+template <typename T>
+void CStateMachine<T>::Update()
+{
+	if (CurrentState)
+	{
+		CTransition<T>* triggeredTransition = nullptr;
+		for (size_t i = 0; i < CurrentState->GetTransitions().Num(); i++)
+		{
+			if (CurrentState->GetTransitions()[i]->IsTriggered())
+			{
+				triggeredTransition = CurrentState->GetTransitions()[i];
+			}
+		}
+
+		if (triggeredTransition)
+		{
+			triggeredTransition->EntryAction();
+			CState<T>* targetState = triggeredTransition->GetTargetState();
+			CurrentState->VExitAction();
+			targetState->VEntryAction();
+			CurrentState = targetState;
+		}
+		else
+		{
+			CurrentState->VAction();
+		}
+	}
+}
+template <typename T>
+CStateMachine<T>* CStateMachine<T>::AddState(CState<T>* newState)
+{
+	StateList.Add(newState);
+	return this;
+}

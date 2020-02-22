@@ -8,15 +8,14 @@
 /**
  * 
  */
-class PROTO_API TransitionCameraChangePress : public CTransition
+class PROTO_API TransitionCameraChangePress : public CTransition<AMainCamera>
 {
 public:
-	TransitionCameraChangePress(CStateMachine* owner, bool invert = false);
+	TransitionCameraChangePress(AMainCamera* owner, bool invert = false);
 	~TransitionCameraChangePress();
 
 	void EntryAction();
 	bool IsTriggered();
 
-	AMainCamera* cameraRef;
 	bool inverse;
 };

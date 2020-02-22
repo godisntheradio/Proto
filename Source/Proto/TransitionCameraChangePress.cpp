@@ -2,10 +2,9 @@
 
 #include "TransitionCameraChangePress.h"
 
-TransitionCameraChangePress::TransitionCameraChangePress(CStateMachine* owner, bool invert) : CTransition(owner)
+TransitionCameraChangePress::TransitionCameraChangePress(AMainCamera* owner, bool invert) : CTransition(owner)
 {
 	inverse = invert;
-	cameraRef = Cast<AMainCamera>(Owner->User);
 }
 
 TransitionCameraChangePress::~TransitionCameraChangePress()
@@ -20,12 +19,5 @@ void TransitionCameraChangePress::EntryAction()
 
 bool TransitionCameraChangePress::IsTriggered()
 {
-	if (inverse)
-	{
-		return !cameraRef->MainTarget->GetChangeCameraMode();
-	}
-	else
-	{	
-		return cameraRef->MainTarget->GetChangeCameraMode();
-	}
+	return inverse == Owner->MainTarget->GetChangeCameraMode();
 }

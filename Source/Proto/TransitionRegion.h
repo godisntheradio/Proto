@@ -5,18 +5,16 @@
 #include "CoreMinimal.h"
 #include "CTransition.h"
 #include "MainCamera.h"
-
 /**
  * 
  */
-class PROTO_API TransitionInsideRegion : public CTransition
+class PROTO_API TransitionRegion : public CTransition<AMainCamera>
 {
 public:
-	TransitionInsideRegion(CStateMachine* owner);
-	~TransitionInsideRegion();
-	
+	TransitionRegion(AMainCamera* owner);
+	~TransitionRegion();
 	void EntryAction();
 	bool IsTriggered();
 
-	AMainCamera* cameraRef;
+	bool Enter;
 };

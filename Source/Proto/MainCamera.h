@@ -60,7 +60,7 @@ public:
 	UPROPERTY(BlueprintReadWrite)
 		bool isInsideCameraRegion;
 
-	CStateMachine* stateMachine;
+	CStateMachine<AMainCamera>* stateMachine;
 };
 
 

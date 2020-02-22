@@ -7,20 +7,36 @@
 /**
  * 
  */
-class CStateMachine;
+template<typename T>
 class PROTO_API CState
 {
 public:
-	CState(CStateMachine* owner);
+	CState(T* owner);
 	virtual ~CState();
 	virtual void VAction() = 0;
 	virtual void VEntryAction() = 0;
 	virtual void VExitAction() = 0;
-	TArray<CTransition*>& GetTransitions();
-
-	CStateMachine* GetOwner();
-private:
-	CStateMachine * Owner;
-	TArray<CTransition*> Transitions;
+	TArray<CTransition<T>*>& GetTransitions();
+protected:
+	T* Owner;
+	TArray<CTransition<T>*> Transitions;
 	
 };
+
+template<typename T>
+CState<T>::CState(T* o)
+{
+	Owner = o;
+	Transitions = TArray<CTransition<T>*>();
+}
+
+template<typename T>
+CState<T>::~CState()
+{
+}
+
+template<typename T>
+TArray<CTransition<T>*>& CState<T>::GetTransitions()
+{
+	return Transitions;
+}

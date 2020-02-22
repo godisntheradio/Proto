@@ -8,13 +8,11 @@
 /**
  * 
  */
-class PROTO_API StateCameraFollow : public CState
+class PROTO_API StateCameraFollow : public CState<AMainCamera>
 {
 public:
-	StateCameraFollow(CStateMachine* owner);
+	StateCameraFollow(AMainCamera* owner);
 	void VAction();
 	void VEntryAction();
 	void VExitAction();
-
-	AMainCamera* cameraRef;
 };

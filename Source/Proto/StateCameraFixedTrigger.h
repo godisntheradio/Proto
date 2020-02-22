@@ -8,16 +8,13 @@
 /**
  * 
  */
-class PROTO_API StateCameraFixedTrigger : public CState
+class PROTO_API StateCameraFixedTrigger : public CState<AMainCamera>
 {
 public:
-	StateCameraFixedTrigger(CStateMachine* owner);
+	StateCameraFixedTrigger(AMainCamera* owner);
 	~StateCameraFixedTrigger();
 
 	void VAction();
 	void VEntryAction();
 	void VExitAction();
-
-	AMainCamera* cameraRef;
-
 };

@@ -7,8 +7,7 @@
 #include "Engine/Engine.h"
 #include "StateCameraFollow.h"
 #include "TransitionCameraChangePress.h"
-#include "TransitionInsideRegion.h"
-#include "TransitionOutsideRegion.h"
+#include "TransitionRegion.h"
 #include "StateCameraFixed.h"
 #include "StateCameraFixedTrigger.h"
 // Sets default values
@@ -20,16 +19,18 @@ AMainCamera::AMainCamera()
 	cameraRef->SetupAttachment(RootComponent);
 	Settings = FCameraSettings();
 
-	stateMachine = new CStateMachine(this);
-	StateCameraFollow* cameraFollow = new StateCameraFollow(stateMachine);
-	TransitionCameraChangePress* PressToFixed = new TransitionCameraChangePress(stateMachine);
-	TransitionInsideRegion* triggerToFixed = new TransitionInsideRegion(stateMachine);
+	stateMachine = new CStateMachine<AMainCamera>(this);
+	StateCameraFollow* cameraFollow = new StateCameraFollow(this);
+	TransitionCameraChangePress* PressToFixed = new TransitionCameraChangePress(this);
+	TransitionRegion* triggerToFixed = new TransitionRegion(this);
+	triggerToFixed->Enter = true;
 
-	StateCameraFixed* cameraFixed = new StateCameraFixed(stateMachine);
-	TransitionCameraChangePress* PressToFollow = new TransitionCameraChangePress(stateMachine,true);
+	StateCameraFixed* cameraFixed = new StateCameraFixed(this);
+	TransitionCameraChangePress* PressToFollow = new TransitionCameraChangePress(this,true);
 
-	StateCameraFixedTrigger* cameraFixedTrigger = new StateCameraFixedTrigger(stateMachine);
-	TransitionOutsideRegion* triggerToFollow = new TransitionOutsideRegion(stateMachine);
+	StateCameraFixedTrigger* cameraFixedTrigger = new StateCameraFixedTrigger(this);
+	TransitionRegion* triggerToFollow = new TransitionRegion(this);
+	triggerToFixed->Enter = false;
 	
 	PressToFixed->SetTargetState(cameraFixed);
 	cameraFollow->GetTransitions().Add(PressToFixed);
@@ -42,13 +43,10 @@ AMainCamera::AMainCamera()
 	triggerToFollow->SetTargetState(cameraFollow);
 	cameraFixedTrigger->GetTransitions().Add(triggerToFollow);
 
-
-
-	stateMachine->SetInitialState(cameraFollow);
 	stateMachine->AddState(cameraFollow);
 	stateMachine->AddState(cameraFixed);
 	stateMachine->AddState(cameraFixedTrigger);
-	stateMachine->Start();
+	stateMachine->Start(cameraFixed);
 }
 
 // Called when the game starts or when spawned

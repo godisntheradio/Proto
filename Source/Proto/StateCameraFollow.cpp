@@ -6,23 +6,22 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "Runtime/Engine/Classes/Engine/World.h"
 
-StateCameraFollow::StateCameraFollow(CStateMachine * owner) : CState(owner)
+StateCameraFollow::StateCameraFollow(AMainCamera* owner) : CState(owner)
 {
 	
 }
 
 void StateCameraFollow::VAction()
 {
-	float DeltaTime = cameraRef->GetWorld()->GetDeltaSeconds();
-	FVector newPos = cameraRef->MainTarget->GetActorLocation() + cameraRef->Settings.Offset;
-	cameraRef->SetActorLocation(FMath::Lerp(cameraRef->GetActorLocation(), newPos, DeltaTime * cameraRef->Settings.DisplacementSpeed));
-	FQuat newRotation = FQuat(UKismetMathLibrary::FindLookAtRotation(cameraRef->GetActorLocation(), cameraRef->MainTarget->GetActorLocation()));
-	cameraRef->SetActorRotation(FQuat::Slerp(cameraRef->GetActorRotation().Quaternion(), newRotation, DeltaTime * cameraRef->Settings.DisplacementSpeed));
+	float DeltaTime = Owner->GetWorld()->GetDeltaSeconds();
+	FVector newPos = Owner->MainTarget->GetActorLocation() + Owner->Settings.Offset;
+	Owner->SetActorLocation(FMath::Lerp(Owner->GetActorLocation(), newPos, DeltaTime * Owner->Settings.DisplacementSpeed));
+	FQuat newRotation = FQuat(UKismetMathLibrary::FindLookAtRotation(Owner->GetActorLocation(), Owner->MainTarget->GetActorLocation()));
+	Owner->SetActorRotation(FQuat::Slerp(Owner->GetActorRotation().Quaternion(), newRotation, DeltaTime * Owner->Settings.DisplacementSpeed));
 }
 
 void StateCameraFollow::VEntryAction()
 {
-	cameraRef = Cast<AMainCamera>(GetOwner()->User);
 }
 
 void StateCameraFollow::VExitAction()

@@ -8,14 +8,12 @@
 /**
  * 
  */
-class PROTO_API StateCameraFixed : public CState
+class PROTO_API StateCameraFixed : public CState<AMainCamera>
 {
 public:
-	StateCameraFixed(CStateMachine* owner);
+	StateCameraFixed(AMainCamera* owner);
 	~StateCameraFixed();
 	void VAction();
 	void VEntryAction();
 	void VExitAction();
-
-	AMainCamera* cameraRef;
 };
