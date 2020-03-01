@@ -40,6 +40,9 @@ public:
 	void ChangeCameraModeFalse();
 
 	UFUNCTION(BlueprintCallable, Category = "BallMovement")
+	void ChangeCameraModeToggle();
+
+	UFUNCTION(BlueprintCallable, Category = "BallMovement")
 	void UpdateCameraTransform(FTransform transform);
 	// --------------
 	// RPC's

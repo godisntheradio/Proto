@@ -17,6 +17,7 @@ public:
 	virtual void VEntryAction() = 0;
 	virtual void VExitAction() = 0;
 	TArray<CTransition<T>*>& GetTransitions();
+	void AddTransitions(CTransition<T>* transition);
 protected:
 	T* Owner;
 	TArray<CTransition<T>*> Transitions;
@@ -39,4 +40,10 @@ template<typename T>
 TArray<CTransition<T>*>& CState<T>::GetTransitions()
 {
 	return Transitions;
+}
+
+template<typename T>
+void CState<T>::AddTransitions(CTransition<T>* transition)
+{
+	Transitions.Add(transition);
 }

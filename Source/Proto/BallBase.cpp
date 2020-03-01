@@ -98,6 +98,10 @@ void ABallBase::ChangeCameraModeFalse()
 {
 	changeCamera = false;
 }
+void ABallBase::ChangeCameraModeToggle()
+{
+	changeCamera = !changeCamera;
+}
 void ABallBase::UpdateCameraTransform(FTransform transform)
 {
 	cameraTransform = transform;

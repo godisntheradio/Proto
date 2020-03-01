@@ -8,6 +8,7 @@
 #include "BallBase.h"
 #include "CStateMachine.h"
 #include "MainCamera.generated.h"
+
 USTRUCT(BlueprintType)
 struct FCameraSettings
 {

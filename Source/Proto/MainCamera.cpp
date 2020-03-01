@@ -21,32 +21,34 @@ AMainCamera::AMainCamera()
 
 	stateMachine = new CStateMachine<AMainCamera>(this);
 	StateCameraFollow* cameraFollow = new StateCameraFollow(this);
+	StateCameraFixed* cameraFixed = new StateCameraFixed(this);
+	StateCameraFixedTrigger* cameraFixedTrigger = new StateCameraFixedTrigger(this);
+
 	TransitionCameraChangePress* PressToFixed = new TransitionCameraChangePress(this);
+	TransitionCameraChangePress* PressToFollow = new TransitionCameraChangePress(this,true);
 	TransitionRegion* triggerToFixed = new TransitionRegion(this);
 	triggerToFixed->Enter = true;
-
-	StateCameraFixed* cameraFixed = new StateCameraFixed(this);
-	TransitionCameraChangePress* PressToFollow = new TransitionCameraChangePress(this,true);
-
-	StateCameraFixedTrigger* cameraFixedTrigger = new StateCameraFixedTrigger(this);
 	TransitionRegion* triggerToFollow = new TransitionRegion(this);
-	triggerToFixed->Enter = false;
+	triggerToFollow->Enter = false;
 	
+	cameraFollow->AddTransitions(PressToFixed);
 	PressToFixed->SetTargetState(cameraFixed);
-	cameraFollow->GetTransitions().Add(PressToFixed);
-	triggerToFixed->SetTargetState(cameraFixedTrigger);
-	cameraFollow->GetTransitions().Add(triggerToFixed);
-	
-	PressToFollow->SetTargetState(cameraFollow);
-	cameraFixed->GetTransitions().Add(PressToFollow);
 
+	cameraFixed->AddTransitions(PressToFollow);
+	PressToFollow->SetTargetState(cameraFollow);
+
+	cameraFixedTrigger->AddTransitions(triggerToFollow);
 	triggerToFollow->SetTargetState(cameraFollow);
-	cameraFixedTrigger->GetTransitions().Add(triggerToFollow);
+
+	cameraFixed->AddTransitions(triggerToFixed);
+	cameraFollow->AddTransitions(triggerToFixed);
+	triggerToFixed->SetTargetState(cameraFixedTrigger);
 
 	stateMachine->AddState(cameraFollow);
 	stateMachine->AddState(cameraFixed);
 	stateMachine->AddState(cameraFixedTrigger);
-	stateMachine->Start(cameraFixed);
+
+	stateMachine->Start(cameraFollow);
 }
 
 // Called when the game starts or when spawned
